@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我要賣衣服</title>
+    <style>
+        .top-message {
+            text-align: center;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            margin: 0;
+            z-index: 1000;
+            background-color: #9b3929;
+            color: white;
+            padding: 10px 0;
+        }
+
+        /* 頂部的選單 */
+        .navbar {
+            position: fixed;
+            top: -100px;
+            /* Initially hide the navbar */
+            width: 100%;
+            height: 100px;
+            z-index: 999;
+            transition: top 0.3s;
+            background-color: white;
+        }
+
+
+
+        .navbar.show {
+            top: 40px;
+            /* Show the navbar */
+        }
+
+        .input-group .form-control,
+        .input-group .btn {
+            border-radius: 25px;
+            /* 圆角 */
+        }
+
+        .btn.btn-outline-success {
+            background-color: #9b3929;
+            color: #ffffff;
+            border-color: #9b3929;
+        }
+
+        .btn.btn-outline-success:hover {
+            background-color: #F1CFAD;
+            color: #9b3929;
+            border-color: #9b3929;
+        }
+
+        .navbar-brand img {
+            max-width: 80px;
+            /* 最大寬度為50像素 */
+            max-height: 80px;
+            /* 最大高度為50像素 */
+            margin-right: 10px;
+            /* 右邊距為10像素 */
+        }
+
+        .navbar-brand {
+            font-size: 24px;
+            /* 更改字體大小 */
+            font-weight: bold;
+            /* 加粗文字 */
+
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            /* 水平置中 */
+            align-items: center;
+            /* 垂直置中 */
+            text-align: center;
+            /* 文字置中 */
+            position: relative;
+            /* 父容器設置為相對定位 */
+            flex-direction: column;
+            /* 讓子元素以垂直方向排列 */
+        }
+
+        .container img {
+            max-width: 100%;
+            /* 確保圖片不會超出容器寬度 */
+            max-height: 100%;
+            /* 確保圖片不會超出容器高度 */
+            vertical-align: middle;
+            /* 確保圖片垂直置中 */
+        }
+
+        .title,
+        .content {
+            text-align: center;
+            /* 文字置中 */
+        }
+
+        .button-container {
+            display: flex;
+            /* 將子元素水平排列 */
+            justify-content: space-around;
+            /* 水平居中對齊 */
+        }
+
+        .button {
+            display: block;
+            text-decoration: none;
+            /* 移除底線 */
+            padding: 10px 10px;
+            /* 調整按鈕內容的填充 */
+            margin: 10px;
+            /* 按鈕之間的間距 */
+            background-color: #9b3929;
+            /* 按鈕的背景顏色 */
+            color: #ffffff;
+            /* 按鈕的文字顏色 */
+            border: none;
+            /* 移除邊框 */
+            border-radius: 50px;
+            /* 圓角 */
+            width: 100px;
+            /* 按鈕寬度 */
+            height: 50px;
+            /* 按鈕高度 */
+            font-size: 15px;
+            text-align: center;
+            /* 按鈕文本置中 */
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            /* 添加過渡效果 */
+        }
+
+        .button:hover {
+            background-color: #F1CFAD;
+            /* 懸停時的背景顏色 */
+            color: #9b3929;
+            /* 懸停時的文字顏色 */
+            animation: buttonAnimation 0.3s forwards;
+        }
+
+        /*使用keyframe讓滑鼠在按鈕上時有放大縮小的效果*/
+        @keyframes buttonAnimation {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.2);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        #scrollToTopBtn {
+            display: none;
+            /* 預設隱藏 */
+            position: fixed;
+            /* 固定在頁面上 */
+            bottom: 20px;
+            /* 與底部距離 20 像素 */
+            right: 20px;
+            /* 與右側距離 20 像素 */
+            z-index: 99;
+            /* 確保在其他內容之上 */
+            font-size: 16px;
+            background-color: #9b3929;
+            /* 背景色 */
+            color: #F1CFAD;
+            /* 文字顏色 */
+            border: none;
+            cursor: pointer;
+            padding: 15px 20px;
+            border-radius: 50%;
+        }
+
+        /* 按鈕懸停時的樣式 */
+        #scrollToTopBtn:hover {
+            background-color: #F1CFAD;
+            /* 滑鼠懸停時的背景色 */
+            color: #9b3929;
+        }
+    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+</head>
+
+<body>
+
+    <div class="top-message" id="topMessage">
+        We try to express ourselves and reduce clothing waste at the same time!
+    </div>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" id="navbar">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#"><img src="img/logo.png" alt="navbar ">綘衫紩褲</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="index.html">首頁</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown">
+                            服務項目
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">二手衣買賣</a></li>
+                            <li><a class="dropdown-item" href="#">線上試衣間</a></li>
+                            <li><a class="dropdown-item" href="#">穿搭論壇</a></li>
+                            <li><a class="dropdown-item" href="#">衣物活動</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">品牌項目</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">關於我們</a>
+                    </li>
+                </ul>
+                <form class="d-flex">
+                    <div class="input-group">
+                        <input class="form-control" type="search" placeholder="Search..." aria-label="Search">
+                        <button class="btn btn-outline-success" type="submit">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-search" viewBox="0 0 16 16">
+                                <path
+                                    d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+                            </svg>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <h1 class="animate__animated animate__fadeInDown" style=" color: #9b3929; "><b>延續衣物使用，創造嶄新故事</b></h1>
+    </div>
+
+    <div class="container" style="margin: auto;">
+        <img class="animate__animated animate__fadeInDown" src="img/LINE_ALBUM_2024.6.6_240606_5.jpg" alt="">
+    </div>
+
+    <hr class="my-4">
+
+    <div class="container" style="margin: auto;">
+        <h2 class="title " style=" color: #9b3929;"><b>寄賣標準</b></h2>
+        <p class="content"><b>1.衣物至少七成新</b></p>
+        <p class="content"><b>2.只收女裝或中性服飾</b></p>
+        <p class="content"><b>3.只收二手衣物，不收包包、飾品、床單等二手商品</b></p>
+        <p class="content"><b>4.拒收大面積受損/汙漬/泛黃/退色/起毛球等情形之衣物</b></p>
+        <p class="content"><b>5.貼身衣物如內衣褲、襪子等，只收吊牌未剪或尚未拆封的新品</b></p>
+    </div>
+
+    <hr class="my-4">
+
+    <div class="container" style="margin: auto;">
+        <h2 class="title" style=" color: #9b3929;"><b>一起延續衣物故事！</b></h2>
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" placeholder="輸入您的電子信箱" aria-label="Username"
+                aria-describedby="basic-addon1">
+        </div>
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" placeholder="輸入您的密碼" aria-label="Username"
+                aria-describedby="basic-addon1">
+        </div>
+        <div class="button-container">
+            <button class="button"><b>登入</b></button>
+            <button class="button"><b>註冊</b></button>
+        </div>
+    </div>
+
+    <hr class="my-4">
+
+    <div class="container">
+        <div class="input-group mb-5">
+            <input type="text" class="form-control" placeholder="歡迎填入您的疑問，即刻為您服務" aria-label="Recipient's username"
+                aria-describedby="button-addon2">
+            <button class="btn btn-outline-secondary" type="button" id="button-addon2"
+                style="background-color: #9b3929; color: #ffffff;">立即傳送</button>
+        </div>
+    </div>
+
+
+
+    <button onclick="scrollTopToTop()" id="scrollToTopBtn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-up"
+            viewBox="0 0 16 16">
+            <path fill-rule="evenodd"
+                d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5" />
+        </svg>
+    </button>
+
+    <footer style="background-color: #9b3929; display: flex; flex-wrap: wrap;" class="py-4">
+        <div style="flex: 1; padding-left: 400px;">
+            <h5 class="text-light m-0"><b>認識我們</b></h5>
+            <p></p>
+            <p class="text-light m-0">緣起</p>
+            <p></p>
+            <p class="text-light m-0">聯絡我們</p>
+        </div>
+        <div style="flex: 1;">
+            <h5 class="text-light m-0"><b>相關連結</b></h5>
+            <p></p>
+            <a class="text-light m-0" href="https://www.flytech.com.tw/">
+                <p>飛捷科技官方網站</p>
+            </a>
+            <a class="text-light m-0" href="https://foundation.flytech.com.tw/aboutdft.html">
+                <p>Design For Taiwan</p>
+            </a>
+        </div>
+    </footer>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous">
+        </script>
+    <script>
+        document.addEventListener('mousemove', function (event) {
+            const navbar = document.getElementById('navbar'); // 獲取導航欄元素
+            const container = document.querySelector('.container'); // 獲取容器元素
+            const navbarHeight = navbar.offsetHeight; // 獲取導航欄高度
+            if (event.clientY < navbarHeight) { // 如果鼠標位於導航欄區域
+                navbar.classList.add('show'); // 顯示導航欄
+                container.style.marginTop = navbarHeight + 'px'; // 將容器向上移動
+            } else if (event.clientY > navbarHeight + 50) { // 如果鼠標離開導航欄區域
+                navbar.classList.remove('show'); // 隱藏導航欄
+                container.style.marginTop = '0'; // 將容器恢復原位
+            }
+        });
+    </script>
+
+    <script>
+        // 當頁面滾動時，顯示或隱藏按鈕
+        window.onscroll = function () { scrollFunction() };
+
+        function scrollFunction() {
+            var scrollToTopBtn = document.getElementById("scrollToTopBtn");
+
+            // 如果滾動超過 20 像素，顯示按鈕，否則隱藏按鈕
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                scrollToTopBtn.style.display = "block";
+            } else {
+                scrollToTopBtn.style.display = "none";
+            }
+        }
+
+        // 點擊按鈕，滾動到頁面頂部
+        function scrollTopToTop() {
+            document.body.scrollTop = 0; // 兼容舊版本瀏覽器
+            document.documentElement.scrollTop = 0; // 兼容現代瀏覽器
+        }
+    </script>
+</body>
+
+</html>
